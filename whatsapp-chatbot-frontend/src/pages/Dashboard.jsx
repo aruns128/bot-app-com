@@ -20,25 +20,25 @@ export default function Dashboard() {
 
   const [recentOrders, setRecentOrders] = useState([]);
 
-  useEffect(() => {
-    async function load() {
-      // Backend returns conversations as "orders"
-      const res = await api.get("/admin/orders");
-      const orders = res.data.orders || [];
+useEffect(() => {
+  async function load() {
+    const res = await api.get("/admin/orders");
+    const ordersObj = res.data.orders?.[0] || {};
+    
+    // Convert object to array
+    const orders = Object.values(ordersObj).filter(o => o.phone !== "undefined");
 
-      const total = orders.length;
-      const pending = orders.filter(o => o.state === "PAYMENT_PENDING").length;
-      const paid = orders.filter(o => o.state === "PAID").length;
-      const invoiced = orders.filter(o => o.state === "INVOICED").length;
+    const total = orders.length;
+    const pending = orders.filter(o => o.state === "PAYMENT_PENDING").length;
+    const paid = orders.filter(o => o.state === "PAID").length;
+    const invoiced = orders.filter(o => o.state === "INVOICED").length;
 
-      setStats({ total, pending, paid, invoiced });
+    setStats({ total, pending, paid, invoiced });
+    setRecentOrders(orders.slice(0, 5));
+  }
 
-      // show last 5 orders
-      setRecentOrders(orders.slice(0, 5));
-    }
-
-    load();
-  }, []);
+  load();
+}, []);
 
   return (
     <div className="space-y-6">

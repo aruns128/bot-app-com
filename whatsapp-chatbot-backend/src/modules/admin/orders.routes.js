@@ -7,14 +7,22 @@ import { getConvo, saveConvo } from "../../core/cartFileStore.js";
 
 export const adminOrdersRoutes = Router();
 
-const CART_FILE = path.resolve(process.cwd(), "data", "cart.json");
+const CART_FILE = path.resolve(process.cwd(), "data", "carts.json");
 const publicBaseUrl = process.env.PUBLIC_BASE_URL || "http://localhost:3000";
 
 function readAll() {
+  console.log("Reading all orders from file:", CART_FILE);
   if (!fs.existsSync(CART_FILE)) return {};
-  const raw = fs.readFileSync(CART_FILE, "utf-8") || "{}";
-  return JSON.parse(raw);
+  try {
+    const raw = fs.readFileSync(CART_FILE, "utf-8") || "{}";
+    return JSON.parse(raw);
+  } catch (error) {
+    console.error("Error reading cart file:", error);
+    return {};
+  }
 }
+
+
 
 /**
  * GET /admin/orders?state=INVOICED&phone=...
@@ -28,7 +36,6 @@ adminOrdersRoutes.get("/", (req, res) => {
   if (state) orders = orders.filter((o) => o.state === state);
   if (phone) orders = orders.filter((o) => String(o.phone).includes(String(phone)));
 
-  // Sort newest first (if orderId contains timestamp; otherwise keep stable)
   orders = orders.reverse();
 
   res.json({ ok: true, orders });
@@ -44,7 +51,6 @@ adminOrdersRoutes.get("/:phone", async (req, res) => {
 
 /**
  * POST /admin/orders/:phone/resend-invoice
- * - Only works if payment is paid OR state is INVOICED/PAID
  */
 adminOrdersRoutes.post("/:phone/resend-invoice", async (req, res) => {
   const phone = req.params.phone;
@@ -60,7 +66,6 @@ adminOrdersRoutes.post("/:phone/resend-invoice", async (req, res) => {
   if (!convo.context) convo.context = {};
   convo.context.orderId = orderId;
 
-  // allow resend only if paid or already invoiced
   const paid = convo.context?.payment?.status === "paid" || convo.state === "PAID" || convo.state === "INVOICED";
   if (!paid) {
     return res.status(400).json({ ok: false, error: "Order not paid yet" });

@@ -7,10 +7,13 @@ export default function Orders() {
   const [state, setState] = useState("");
   const [phone, setPhone] = useState("");
 
-  const load = async () => {
-    const res = await listOrders({ state: state || undefined, phone: phone || undefined });
-    setOrders(res.data.orders || []);
-  };
+ const load = async () => {
+  const res = await listOrders({ state: state || undefined, phone: phone || undefined });
+  const ordersData = res.data.orders?.[0] || {};
+  const ordersList = Object.values(ordersData).filter(order => order.phone !== "undefined");
+  setOrders(ordersList);
+};
+
 
   useEffect(() => { load(); }, []);
 
