@@ -1,0 +1,140 @@
+@baseUrl = http://localhost:3000
+@phone = 1234
+
+### 0) Clear cart / reset conversation (file store)
+POST {{baseUrl}}/admin/cart/{{phone}}/clear
+Content-Type: application/json
+
+{}
+
+### 1) NEW -> CATEGORY
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "text": "hi"
+}
+
+### 2) CATEGORY -> ITEM (choose cakes)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "cat:cakes"
+}
+
+### 3) ITEM -> QTY (choose chocolate cake)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "item:cake_choco"
+}
+
+### 4) QTY -> CART (qty 2)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "qty:2"
+}
+
+### 5) CART -> CATEGORY (add more)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "cart:add_more"
+}
+
+### 6) CATEGORY -> ITEM (choose bread)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "cat:bread"
+}
+
+### 7) ITEM -> QTY (choose white bread)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "item:bread_white"
+}
+
+### 8) QTY -> CART (qty 1)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "qty:1"
+}
+
+### 9) CART -> ADDRESS_HOUSE (checkout)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "cart:checkout"
+}
+
+### 10) ADDRESS_HOUSE -> ADDRESS_STREET
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "text": "12B, Sai Apartments"
+}
+
+### 11) ADDRESS_STREET -> ADDRESS_PINCODE
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "text": "MG Road, Near Temple"
+}
+
+### 12) ADDRESS_PINCODE -> ADDRESS_CONFIRM
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "text": "600001"
+}
+
+### 13) ADDRESS_CONFIRM -> PAYMENT (confirm)
+POST {{baseUrl}}/whatsapp/mock-incoming
+Content-Type: application/json
+
+{
+  "from": "{{phone}}",
+  "interactiveId": "addr:confirm"
+}
+
+### 14) Verify conversation + cart + address saved in cart.json
+GET {{baseUrl}}/admin/cart/{{phone}}
+
+### 15) Simulate payment success
+POST {{baseUrl}}/payment/mock-success
+Content-Type: application/json
+
+{
+  "phone": "{{phone}}"
+}
+
+
+### 14) Verify conversation + cart + address saved in cart.json
+GET {{baseUrl}}/admin/cart/{{phone}}
