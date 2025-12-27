@@ -7,7 +7,7 @@ const CART_FILE = path.join(DATA_DIR, "carts.json");
 // Atomic write helper
 async function writeJSONAtomic(filePath, obj) {
   await fs.mkdir(path.dirname(filePath), { recursive: true });
-  const tmp = `${filePath}.tmp`;
+  const tmp = `${filePath}`;
   await fs.writeFile(tmp, JSON.stringify(obj, null, 2), "utf-8");
   await fs.rename(tmp, filePath);
 }

@@ -138,3 +138,13 @@ Content-Type: application/json
 
 ### 14) Verify conversation + cart + address saved in cart.json
 GET {{baseUrl}}/admin/cart/{{phone}}
+
+
+
+### 15) Simulate payment reminder during PAYMENT_PENDING 
+POST {{baseUrl}}/invoice/{{phone}}.pdf
+Content-Type: application/json
+
+{
+  "orderId": "{{phone}}"
+}

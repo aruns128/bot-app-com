@@ -12,6 +12,8 @@ invoiceRoutes.get("/:orderId.pdf", (req, res) => {
   const { orderId } = req.params;
   const filePath = getInvoicePath(orderId);
 
+  console.log(`Serving invoice file: ${filePath}`);
+
   if (!fs.existsSync(filePath)) {
     return res.status(404).json({ error: "Invoice not found" });
   }

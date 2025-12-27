@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Orders from "./pages/Orders";
 import OrderDetail from "./pages/OrderDetail.jsx";
 import Layout from "./components/Layout";
+import Chatbot from "./pages/Chatbot.jsx";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
             <Route index element={<Dashboard />} />
             <Route path="orders" element={<Orders />} />
             <Route path="orders/:phone" element={<OrderDetail />} />
+            <Route path="chatbot" element={<Chatbot />} />
           </Route>
         </Routes>
       </BrowserRouter>

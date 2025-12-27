@@ -328,16 +328,21 @@ export async function processWebhookBody(body) {
       convo.state = "PAYMENT_PENDING";
       await saveConversation(storeType, convo);
 
-      await whatsapp.sendText(
-        phone,
-        `💳 Payment Link Created\n` +
+      const cartItems = Object.values(convo.context.cart || {})
+        .map((item) => `• ${item.name} x${item.qty} = ₹${item.price * item.qty}`)
+        .join("\n");
+      const order_info =  `💳 Payment Link Created\n` +
           `Order: ${orderId}\n` +
           `Amount: ₹${total}\n\n` +
+          `📦 Items:\n${cartItems}\n\n` +
           `Pay here: ${link.short_url}\n\n` +
           `After payment, you will receive invoice automatically.`
+      await whatsapp.sendText(
+        phone,
+        order_info
       );
 
-      return { ok: true, action: "payment_link_sent", orderId, paymentLinkId: link.id, storeType };
+      return { ok: true, action: "payment_link_sent", orderId, paymentLinkId: link.id, order_info, storeType };
     }
 
     if (interactiveId === "addr:edit_house") {
@@ -365,9 +370,9 @@ export async function processWebhookBody(body) {
   // Optional: if user messages during PAYMENT_PENDING
   if (convo.state === "PAYMENT_PENDING") {
     await whatsapp.sendText(phone, "💳 Please complete the payment using the link sent. Once paid, invoice will be sent.");
-    return { ok: true, action: "payment_pending_reminder", storeType };
+    await whatsapp.sendText(phone, `Pay here: ${convo.context.payment.short_url}`);
+    return { ok: true, action: "payment_pending_reminder", storeType,"pay_here":`Pay here: ${convo.context.payment.short_url}` };
   }
-
   return { ok: true, action: "no_action", state: convo.state, storeType };
 }
 

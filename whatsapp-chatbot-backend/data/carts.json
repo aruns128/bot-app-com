@@ -4,16 +4,9 @@
       "phone": "1234",
       "state": "INVOICED",
       "context": {
-        "cart": {
-          "cake_choco": {
-            "itemId": "cake_choco",
-            "name": "Chocolate Cake",
-            "price": 500,
-            "qty": 2
-          }
-        },
+        "cart": {},
         "selectedItem": null,
-        "selectedCategoryId": "cakes",
+        "selectedCategoryId": null,
         "total": 1000,
         "address": {
           "house": "12B, Sai Apartments",
@@ -30,7 +23,39 @@
         "invoiceGenerated": false,
         "paidAt": "2025-12-26T16:10:35.928Z"
       },
-      "updatedAt": "2025-12-26T16:10:35.962Z"
+      "updatedAt": "2025-12-27T06:38:54.872Z"
+    },
+    "1234567": {
+      "phone": "1234567",
+      "state": "INVOICED",
+      "context": {
+        "cart": {
+          "cake_choco": {
+            "itemId": "cake_choco",
+            "name": "Chocolate Cake",
+            "price": 500,
+            "qty": 3
+          }
+        },
+        "selectedCategoryId": "cakes",
+        "selectedItem": null,
+        "total": 1500,
+        "address": {
+          "house": "Hi",
+          "street": "hi",
+          "pincode": "600001"
+        },
+        "orderId": "ORD-1234567-1766813921668",
+        "payment": {
+          "id": "mock_plink_1766813921668",
+          "short_url": "https://mockpay.local/pay?ref=ORD-1234567-1766813921668&amount=1500&phone=1234567",
+          "status": "paid"
+        },
+        "paymentLinkId": "mock_plink_1766813921668",
+        "invoiceGenerated": false,
+        "paidAt": "2025-12-27T05:49:08.661Z"
+      },
+      "updatedAt": "2025-12-27T06:52:48.445Z"
     },
     "919876543210": {
       "phone": "919876543210",
@@ -106,6 +131,14 @@
         "paidAt": "2025-12-26T03:55:49.640Z"
       },
       "updatedAt": "2025-12-26T03:55:49.739Z"
+    },
+    "9999999999": {
+      "phone": "9999999999",
+      "state": "NEW",
+      "context": {
+        "cart": {}
+      },
+      "updatedAt": "2025-12-27T05:11:17.837Z"
     }
   }
 }
